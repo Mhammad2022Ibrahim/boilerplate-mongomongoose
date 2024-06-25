@@ -1,32 +1,81 @@
 require('dotenv').config();
+const mongoose = require('mongoose');
 
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-let Person;
+const personSchema = new mongoose.Schema({
+  name:{
+    type: String,
+    required: true
+  },
+  age: Number,
+  favoriteFoods: [String]
+})
+
+let Person = mongoose.model('Person', personSchema);
 
 const createAndSavePerson = (done) => {
-  done(null /*, data*/);
+  const person =new Person({
+    name: "Mhammad IB",
+    age: 24,
+    favoriteFoods: ["Pizza", "Burger", "Fries"]
+  });
+  person.save((err,data)=>{
+    if(err) return done(err);
+    console.log(data);
+    done(null , data);
+  });
+  
 };
 
 const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
+  Person.create(arrayOfPeople,(err,data)=>{
+    if(err) return done(err);
+    console.log(data);
+    done(null, data);
+  });
+  
 };
 
 const findPeopleByName = (personName, done) => {
-  done(null /*, data*/);
+  Person.find({name: personName},(err,data)=>{
+    if(err) return done(err);
+    console.log(data);
+    done(null , data);
+  });
+  
 };
 
 const findOneByFood = (food, done) => {
-  done(null /*, data*/);
+  Person.findOne({favoriteFoods: food},(err, data)=>{
+    if(err) return done(err);
+    console.log(data);
+    done(null, data);
+  });
+
 };
 
 const findPersonById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findById({ _id: personId},(err, data)=>{
+    if(err) return done(err);
+    console.log(data);
+    done(null, data);
+  });
+
 };
 
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
+  Person.findById({_id: personId},(err,person)=>{
+    person.favoriteFoods.push(foodToAdd);
+    person.markModified('favoriteFoods');  // if favoriteFoods is of Mixed type
 
-  done(null /*, data*/);
+    person.save((err,updatedPerson)=>{
+      if(err) return done(err);
+      done(null, updatedPerson);
+    });
+  });
+  // done(null /*, data*/);
 };
 
 const findAndUpdate = (personName, done) => {
