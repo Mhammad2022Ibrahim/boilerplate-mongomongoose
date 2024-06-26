@@ -15,7 +15,9 @@ const personSchema = new mongoose.Schema({
   favoriteFoods: [String]
 })
 
+// let Person = mongoose.model('Person', personSchema);
 let Person = mongoose.model('Person', personSchema);
+
 
 const createAndSavePerson = (done) => {
   const person = new Person({
@@ -24,12 +26,29 @@ const createAndSavePerson = (done) => {
     favoriteFoods: ["Pizza", "Burger", "Fries"]
   });
   person.save((err, data) => {
-    if (err) return done(err);
-    console.log(data);
+    if (err) {
+      console.error('Error saving document:', err);
+      return done(err);
+    }
+    console.log('Document saved:', data);
     done(null, data);
   });
-
 };
+
+
+// const createAndSavePerson = (done) => {
+//   const person = new Person({
+//     name: "Mhammad IB",
+//     age: 24,
+//     favoriteFoods: ["Pizza", "Burger", "Fries"]
+//   });
+//   person.save((err, data) => {
+//     if (err) return done(err);
+//     console.log(data);
+//     done(null, data);
+//   });
+
+// };
 
 const createManyPeople = (arrayOfPeople, done) => {
   Person.create(arrayOfPeople, (err, data) => {
@@ -96,22 +115,32 @@ const findAndUpdate = (personName, done) => {
 };
 
 const removeById = (personId, done) => {
-  Person.findByIdAndRemove({ _id: personId }, (err, data) => {
-    if (err) return done(err);
-    console.log(data);
-    done(null, data);
-  });
+  // Person.findByIdAndRemove({ _id: personId }, (err, data) => {
+  //   if (err) return done(err);
+  //   console.log(data);
+  //   done(null, data);
+  // });
 
 };
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
-  Person.remove({ name: nameToRemove }, (err, data) => {
-    if (err) return done(err);
-    console.log(data);
-    done(null, data);
-  });
+  // Person.deleteMany({ name: nameToRemove }, (err, data) => {
+  //   if (err) return done(err);
+  //   console.log(data);
+  //   done(null, data);
+  // });
 };
+
+
+// const removeManyPeople = (done) => {
+//   const nameToRemove = "Mary";
+//   Person.remove({ name: nameToRemove }, (err, data) => {
+//     if (err) return done(err);
+//     console.log(data);
+//     done(null, data);
+//   });
+// };
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
